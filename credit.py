@@ -10,8 +10,8 @@ from sklearn.metrics import accuracy_score, classification_report, precision_rec
 import warnings
 import os
 
-a1=pd.read_csv('case_study1.csv')
-a2=pd.read_csv('case_study2.csv')
+a1=pd.read_csv('data/case_study1.csv')
+a2=pd.read_csv('data/case_study2.csv')
 
 df1=a1.copy()
 df2=a2.copy()
@@ -43,3 +43,26 @@ for i in df1.columns:
 df=pd.merge(df1,df2,how='inner',left_on=['PROSPECTID'],right_on=['PROSPECTID'])
 print(df.head())
 print(df.shape)
+# divide cols into categorical and numerical
+df.info()
+for i in df.columns:
+    if df[i].dtype=='object':
+        print(i)
+
+# chi square test
+
+for i in ['MARITALSTATUS','EDUCATION','GENDER','last_prod_enq2','first_prod_enq2']:
+    chi2,pval,_,_=chi2_contingency(pd.crosstab(df[i],df['Approved_Flag']))
+    print(i,'---',pval)
+
+# we have taken signifance level->0.05
+#since all cat features have pval<=0.05,we accept them all
+
+#numerical features
+num_features=[]
+for i in df.columns:
+    if df[i].dtype!='object' and i not in ['PROSPECTID','Approved_Flag']:
+        num_features.append(i)
+print(len(num_features))
+
+print(['MARITALSTATUS','EDUCATION','GENDER','last_prod_enq2','first_prod_enq2','PROSPECTID','Approved_Flag'] in num_features)
