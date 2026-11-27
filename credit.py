@@ -66,3 +66,24 @@ for i in df.columns:
 print(len(num_features))
 
 print(['MARITALSTATUS','EDUCATION','GENDER','last_prod_enq2','first_prod_enq2','PROSPECTID','Approved_Flag'] in num_features)
+
+# Variance Inflation Factor for multicolinearity
+vif_data=df[num_features]
+total_columns=vif_data.shape[1]
+columns_to_be_kept=[]
+columns_index=0
+
+for i in range(0,total_columns):
+
+    vif_value=variance_inflation_factor(vif_data,columns_index)
+
+    if vif_value<=6:
+        columns_to_be_kept.append(num_features[i])
+        columns_index+=1
+    else:
+        vif_data=vif_data.drop([num_features[i]],axis=1)
+print(len(columns_to_be_kept))
+print(vif_data.shape)
+
+# our dataset is left with 46 columns 
+#Multicolinearity removed
