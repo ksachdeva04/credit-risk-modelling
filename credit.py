@@ -87,3 +87,18 @@ print(vif_data.shape)
 
 # our dataset is left with 46 columns 
 #Multicolinearity removed
+
+#ANOVA Test for num cols
+from scipy.stats import f_oneway
+cols_to_be_kept_num=[]
+for i in columns_to_be_kept:
+    a=list(df[i])
+    b=list(df['Approved_Flag'])
+    group_P1=[value for value,group in zip(a,b) if group =='P1']
+    group_P2=[value for value,group in zip(a,b) if group =='P2']
+    group_P3=[value for value,group in zip(a,b) if group =='P3']
+    group_P4=[value for value,group in zip(a,b) if group =='P4']
+    f_statistic,p_value=f_oneway(group_P1,group_P2,group_P3,group_P4)
+    if p_value<=0.05:
+        cols_to_be_kept_num.append(i)
+print(len(cols_to_be_kept_num))
